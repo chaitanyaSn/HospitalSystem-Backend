@@ -30,4 +30,9 @@ public class PatientController {
         PatientDto updatedPatient = patientService.updatePatient(patientDto);
         return new ResponseEntity<>(updatedPatient, HttpStatus.OK);
     }
+    @GetMapping("/exists/{id}")
+    public ResponseEntity<Boolean> patientExists(@PathVariable Long id) {
+        boolean exists = patientService.patientExists(id);
+        return new ResponseEntity<>(exists, HttpStatus.OK);
+    }
 }

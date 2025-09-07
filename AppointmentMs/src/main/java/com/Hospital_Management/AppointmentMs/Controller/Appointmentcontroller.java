@@ -1,6 +1,7 @@
 package com.Hospital_Management.AppointmentMs.Controller;
 
 
+import com.Hospital_Management.AppointmentMs.Dto.AppointmentDetail;
 import com.Hospital_Management.AppointmentMs.Dto.AppointmentDto;
 import com.Hospital_Management.AppointmentMs.Service.AppointmentService;
 import lombok.RequiredArgsConstructor;
@@ -38,5 +39,9 @@ public class Appointmentcontroller {
         appointmentService.completeAppointment(appointmentId);
         return new ResponseEntity<>("Appointment completed",HttpStatus.OK);
 
+    }
+    @GetMapping("/details/{appointmentId}")
+    public ResponseEntity<AppointmentDetail> getAppointmentsDetailsWithName(@PathVariable Long appointmentId) {
+        return ResponseEntity.ok(appointmentService.getAppointmentsDetailsWithName(appointmentId));
     }
 }

@@ -44,5 +44,10 @@ public class PatientServiceImpl implements PatientService {
         return patientRepository.save(patientDto.toEntity()).toDto();
     }
 
+    @Override
+    public boolean patientExists(Long id) {
+        return patientRepository.existsById(id);
+    }
+
 
 }

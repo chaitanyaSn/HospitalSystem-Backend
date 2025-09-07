@@ -41,4 +41,9 @@ public class DocterServiceImpl implements DocterService {
         // Save updated entity and convert back to DTO
         return docterRepository.save(doctorDto.toEntity()).toDto();
     }
+
+    @Override
+    public boolean doctorExists(Long id) {
+        return docterRepository.existsById(id);
+    }
 }

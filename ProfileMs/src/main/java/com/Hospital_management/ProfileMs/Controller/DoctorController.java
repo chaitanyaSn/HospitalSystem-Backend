@@ -30,4 +30,10 @@ public class DoctorController {
         DoctorDto updatedDoctor = doctorService.updateDoctor(doctorDto);
         return ResponseEntity.ok(updatedDoctor);
     }
+
+    @GetMapping("/exists/{id}")
+    public ResponseEntity<Boolean> doctorExists(@PathVariable Long id) {
+        boolean exists = doctorService.doctorExists(id);
+        return ResponseEntity.ok(exists);
+    }
 }

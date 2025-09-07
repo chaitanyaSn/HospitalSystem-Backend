@@ -19,6 +19,7 @@ public class AppointmentDto {
     private LocalDateTime appointmentTime;
     private Status status;
     private String reason;
+    private String notes;
 
     public Appointment toEntity() {
         Appointment appointment = new Appointment();
@@ -29,6 +30,7 @@ public class AppointmentDto {
         appointment.setAppointmentTime(this.appointmentTime);
         appointment.setStatus(this.status);
         appointment.setReason(this.reason);
+        appointment.setNotes(this.notes);
         return appointment;
     }
 }

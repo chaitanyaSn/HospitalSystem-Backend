@@ -25,6 +25,7 @@ public class Appointment {
     @Enumerated(EnumType.STRING)
     private Status status;
     private String reason;
+    private String notes;
 
     public AppointmentDto toDto() {
         AppointmentDto appointmentDto = new AppointmentDto();
@@ -35,6 +36,7 @@ public class Appointment {
         appointmentDto.setAppointmentTime(this.appointmentTime);
         appointmentDto.setStatus(this.status);
         appointmentDto.setReason(this.reason);
+        appointmentDto.setNotes(this.notes);
         return appointmentDto;
     }
 }
