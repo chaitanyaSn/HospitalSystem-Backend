@@ -1,5 +1,6 @@
 package com.Hospital_Management.AppointmentMs.Service.Impl;
 
+import com.Hospital_Management.AppointmentMs.Client.ProfileClient;
 import com.Hospital_Management.AppointmentMs.Dto.*;
 import com.Hospital_Management.AppointmentMs.Entity.Appointment;
 import com.Hospital_Management.AppointmentMs.Repository.AppointmentRepository;
@@ -14,15 +15,15 @@ import org.springframework.transaction.annotation.Transactional;
 public class AppointmentServiceImpl implements AppointmentService {
 
     private final AppointmentRepository appointmentRepository;
-    private final ApiService apiService;
+    private final ProfileClient profileClient;
 
     @Override
     public Long scheduleAppointment(AppointmentDto appointmentDto) {
-        Boolean doctorExists = apiService.doctorExists(appointmentDto.getDoctorId()).block();
+        Boolean doctorExists = profileClient.doctorExists(appointmentDto.getDoctorId());
         if(!doctorExists || doctorExists == null) {
             throw new RuntimeException("Doctor not found");
         }
-        Boolean patientExists = apiService.patientExists(appointmentDto.getPatientId()).block();
+        Boolean patientExists = profileClient.patientExists(appointmentDto.getPatientId());
         if(!patientExists || patientExists == null) {
             throw new RuntimeException("Patient not found");
         }
@@ -63,8 +64,8 @@ public class AppointmentServiceImpl implements AppointmentService {
         AppointmentDto appointmentDto = appointmentRepository.findById(appointmentId)
                 .orElseThrow(() -> new RuntimeException("Appointment not found"))
                 .toDto();
-        DoctorDto doctorDto = apiService.getDoctorById(appointmentDto.getDoctorId()).block();
-        PatientDto patientDto = apiService.getPatientById(appointmentDto.getPatientId()).block();
+        DoctorDto doctorDto = profileClient.getDoctorById(appointmentDto.getDoctorId());
+        PatientDto patientDto = profileClient.getPatientById(appointmentDto.getPatientId());
         return new AppointmentDetail(appointmentDto.getId()
                 ,appointmentDto.getPatientId()
                 ,patientDto.getName()

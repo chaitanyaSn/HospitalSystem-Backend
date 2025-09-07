@@ -8,16 +8,17 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="GatewayMs" />
+        <module name="Erureka-server" />
       </profile>
-      <profile name="Annotation profile for AppointmentMs" enabled="true">
+      <profile name="Annotation profile for UserMS" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
         </processorPath>
-        <module name="AppointmentMs" />
         <module name="UserMS" />
+        <module name="AppointmentMs" />
         <module name="ProfileMs" />
       </profile>
     </annotationProcessing>
@@ -25,6 +26,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="AppointmentMs" options="-parameters" />
+      <module name="Erureka-server" options="-parameters" />
       <module name="GatewayMs" options="-parameters" />
       <module name="ProfileMs" options="-parameters" />
       <module name="UserMS" options="-parameters" />

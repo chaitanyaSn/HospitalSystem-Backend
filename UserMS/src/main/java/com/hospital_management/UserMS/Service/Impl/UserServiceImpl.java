@@ -1,7 +1,9 @@
 package com.hospital_management.UserMS.Service.Impl;
 
+import com.hospital_management.UserMS.Client.ProfileClient;
 import com.hospital_management.UserMS.DTO.UserDto;
 import com.hospital_management.UserMS.Entity.UserEntity;
+import com.hospital_management.UserMS.Entity.UserRole;
 import com.hospital_management.UserMS.Repository.UserRepository;
 import com.hospital_management.UserMS.Service.ApiService;
 import com.hospital_management.UserMS.Service.UserService;
@@ -10,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import reactor.core.publisher.Mono;
 
 @Service
 @RequiredArgsConstructor
@@ -18,7 +21,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final ApiService apiService;
+    private final ProfileClient profileClient;
 
     @Override
     public void registerUser(UserDto userDto) {
@@ -26,7 +29,13 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("User with email " + userDto.getEmail() + " already exists");
         }
         userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        Long profileId=apiService.addProfile(userDto).block();
+        Long profileId=null;
+        if(userDto.getRole().equals(UserRole.DOCTOR)){
+            profileId= profileClient.addDoctorProfile(userDto);
+
+        } else if (userDto.getRole().equals(UserRole.PATIENT)){
+            profileId= profileClient.addPatientProfile(userDto);
+        }
         System.out.println(profileId);
         userDto.setProfileId(profileId);
         userRepository.save(userDto.toEntity());
