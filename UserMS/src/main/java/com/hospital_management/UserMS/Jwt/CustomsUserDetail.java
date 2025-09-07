@@ -20,5 +20,6 @@ public class CustomsUserDetail implements UserDetails {
     private String password;
     private String name;
     private UserRole role;
+    private Long profileId;
     private Collection<? extends GrantedAuthority> authorities;
 }

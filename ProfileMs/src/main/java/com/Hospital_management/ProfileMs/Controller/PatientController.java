@@ -21,7 +21,13 @@ public class PatientController {
     }
 
     @GetMapping("get/{id}")
-    public ResponseEntity<PatientDto> getPatientById(@RequestParam Long id){
+    public ResponseEntity<PatientDto> getPatientById(@PathVariable Long id){
         return new ResponseEntity<>(patientService.getPatientById(id), HttpStatus.OK);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<PatientDto> updatePatient( @RequestBody PatientDto patientDto) {
+        PatientDto updatedPatient = patientService.updatePatient(patientDto);
+        return new ResponseEntity<>(updatedPatient, HttpStatus.OK);
     }
 }

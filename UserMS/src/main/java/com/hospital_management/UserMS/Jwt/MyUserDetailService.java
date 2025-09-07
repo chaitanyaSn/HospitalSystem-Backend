@@ -30,6 +30,7 @@ public class MyUserDetailService implements UserDetailsService {
                 dto.getPassword(),      // must be BCrypt encoded in DB
                 dto.getName(),
                 dto.getRole(),
+                dto.getProfileId(),
                 null
         );
     }

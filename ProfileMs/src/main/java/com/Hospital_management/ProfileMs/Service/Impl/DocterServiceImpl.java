@@ -15,18 +15,30 @@ public class DocterServiceImpl implements DocterService {
 
     @Override
     public Long addDoctor(DoctorDto doctorDto) {
-        if(docterRepository.findByEmail(doctorDto.getEmail()).isPresent()){
+        if (docterRepository.findByEmail(doctorDto.getEmail()).isPresent()) {
             throw new RuntimeException("Email already exists");
         }
-        if(docterRepository.findByLicenseNumber(doctorDto.getLicenseNumber()).isPresent()){
+
+        if (doctorDto.getLicenseNumber() != null &&
+                docterRepository.findByLicenseNumber(doctorDto.getLicenseNumber()).isPresent()) {
             throw new RuntimeException("License Number already exists");
         }
-        return docterRepository.save(doctorDto.toEntity()).getId();
 
+        return docterRepository.save(doctorDto.toEntity()).getId();
     }
+
 
     @Override
     public DoctorDto getDoctorById(Long id) {
         return docterRepository.findById(id).orElseThrow(()->new RuntimeException("Doctor not found")).toDto();
+    }
+
+    @Override
+    public DoctorDto updateDoctor(DoctorDto doctorDto) {
+        docterRepository.findById(doctorDto.getId())
+                .orElseThrow(() -> new RuntimeException("doctorDto not found"));
+
+        // Save updated entity and convert back to DTO
+        return docterRepository.save(doctorDto.toEntity()).toDto();
     }
 }

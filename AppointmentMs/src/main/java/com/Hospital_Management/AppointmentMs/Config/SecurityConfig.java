@@ -1,4 +1,4 @@
-package com.Hospital_management.ProfileMs.Config;
+package com.Hospital_Management.AppointmentMs.Config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +17,7 @@ public class SecurityConfig {
     AuthenticationManager authenticationManagerBean(AuthenticationConfiguration builder) throws Exception {
         return builder.getAuthenticationManager();
     }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeHttpRequests(auth->auth

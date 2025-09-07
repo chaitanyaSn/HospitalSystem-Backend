@@ -1,6 +1,7 @@
 package com.Hospital_management.ProfileMs.Service.Impl;
 
 import com.Hospital_management.ProfileMs.Dto.PatientDto;
+import com.Hospital_management.ProfileMs.Entity.Patient;
 import com.Hospital_management.ProfileMs.Repository.PatientRepository;
 import com.Hospital_management.ProfileMs.Service.PatientService;
 import lombok.RequiredArgsConstructor;
@@ -32,4 +33,16 @@ public class PatientServiceImpl implements PatientService {
     public PatientDto getPatientById(Long id) {
         return patientRepository.findById(id).orElseThrow(()->new RuntimeException("Patient not found")).toDto();
     }
+
+    @Override
+    public PatientDto updatePatient(PatientDto patientDto) {
+        // Check if patient exists
+        patientRepository.findById(patientDto.getId())
+                .orElseThrow(() -> new RuntimeException("Patient not found"));
+
+        // Save updated entity and convert back to DTO
+        return patientRepository.save(patientDto.toEntity()).toDto();
+    }
+
+
 }

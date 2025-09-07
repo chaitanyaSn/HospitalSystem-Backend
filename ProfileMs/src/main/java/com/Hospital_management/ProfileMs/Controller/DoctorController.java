@@ -21,8 +21,13 @@ public class DoctorController {
     }
 
     @GetMapping("get/{id}")
-    public ResponseEntity<DoctorDto> getDoctorById(@RequestParam Long id){
+    public ResponseEntity<DoctorDto> getDoctorById(@PathVariable Long id){
         DoctorDto doctorDto = doctorService.getDoctorById(id);
         return ResponseEntity.ok(doctorDto);
+    }
+    @PutMapping("/update")
+    public ResponseEntity<DoctorDto> updateDoctor( @RequestBody DoctorDto doctorDto) {
+        DoctorDto updatedDoctor = doctorService.updateDoctor(doctorDto);
+        return ResponseEntity.ok(updatedDoctor);
     }
 }
