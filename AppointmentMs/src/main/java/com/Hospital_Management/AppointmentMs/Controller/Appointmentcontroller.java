@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/appointments")
 @RequiredArgsConstructor
@@ -43,5 +45,10 @@ public class Appointmentcontroller {
     @GetMapping("/details/{appointmentId}")
     public ResponseEntity<AppointmentDetail> getAppointmentsDetailsWithName(@PathVariable Long appointmentId) {
         return ResponseEntity.ok(appointmentService.getAppointmentsDetailsWithName(appointmentId));
+    }
+
+    @GetMapping("/getAllByPatient/{patientId}")
+    public ResponseEntity<List<AppointmentDetail>> getAppointmentByPatient(@PathVariable Long patientId){
+        return new ResponseEntity<>(appointmentService.getAllAppointmentByPatientIs(patientId),HttpStatus.OK);
     }
 }

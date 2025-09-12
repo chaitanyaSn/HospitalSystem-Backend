@@ -5,10 +5,13 @@ import com.Hospital_Management.AppointmentMs.Dto.*;
 import com.Hospital_Management.AppointmentMs.Entity.Appointment;
 import com.Hospital_Management.AppointmentMs.Repository.AppointmentRepository;
 import com.Hospital_Management.AppointmentMs.Service.ApiService;
+import com.Hospital_Management.AppointmentMs.Service.AppointmentProducer;
 import com.Hospital_Management.AppointmentMs.Service.AppointmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -16,6 +19,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     private final AppointmentRepository appointmentRepository;
     private final ProfileClient profileClient;
+//    private final AppointmentProducer appointmentProducer;
 
     @Override
     public Long scheduleAppointment(AppointmentDto appointmentDto) {
@@ -28,6 +32,7 @@ public class AppointmentServiceImpl implements AppointmentService {
             throw new RuntimeException("Patient not found");
         }
         appointmentDto.setStatus(Status.SCHEDULED);
+//        appointmentProducer.sendAppointmentScheduledEvent(appointmentDto);
         return appointmentRepository.save(appointmentDto.toEntity()).getId();
     }
 
@@ -71,10 +76,19 @@ public class AppointmentServiceImpl implements AppointmentService {
                 ,patientDto.getName()
                 , appointmentDto.getDoctorId()
                 , doctorDto.getName()
-                , appointmentDto.getAppointmentDate()
                 , appointmentDto.getAppointmentTime()
                 , appointmentDto.getStatus(),
                 appointmentDto.getReason()
                 ,appointmentDto.getNotes());
+    }
+
+    @Override
+    public List<AppointmentDetail> getAllAppointmentByPatientIs(Long patientId) {
+        return appointmentRepository.findAllByPatientId(patientId).stream()
+                .map(appointment->{
+                    DoctorDto doctorDto=profileClient.getDoctorById(appointment.getDoctorId());
+                    appointment.setDoctorName(doctorDto.getName());
+                    return appointment;
+                }).toList();
     }
 }

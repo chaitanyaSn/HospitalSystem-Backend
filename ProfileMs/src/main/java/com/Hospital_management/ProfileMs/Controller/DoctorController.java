@@ -1,11 +1,15 @@
 package com.Hospital_management.ProfileMs.Controller;
 
 
+import com.Hospital_management.ProfileMs.Dto.DoctorDropDown;
 import com.Hospital_management.ProfileMs.Dto.DoctorDto;
 import com.Hospital_management.ProfileMs.Service.DocterService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,5 +39,9 @@ public class DoctorController {
     public ResponseEntity<Boolean> doctorExists(@PathVariable Long id) {
         boolean exists = doctorService.doctorExists(id);
         return ResponseEntity.ok(exists);
+    }
+    @GetMapping("/dropdown")
+    public ResponseEntity<List<DoctorDropDown>> getDoctorDropDown() {
+        return new ResponseEntity<>(doctorService.getDoctorDropDown(), HttpStatus.OK);
     }
 }

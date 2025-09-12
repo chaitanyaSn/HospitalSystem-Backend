@@ -15,7 +15,6 @@ public class AppointmentDto {
     private Long id;
     private Long patientId;
     private Long doctorId;
-    private String appointmentDate;
     private LocalDateTime appointmentTime;
     private Status status;
     private String reason;
@@ -26,7 +25,6 @@ public class AppointmentDto {
         appointment.setId(this.id);
         appointment.setPatientId(this.patientId);
         appointment.setDoctorId(this.doctorId);
-        appointment.setAppointmentDate(this.appointmentDate);
         appointment.setAppointmentTime(this.appointmentTime);
         appointment.setStatus(this.status);
         appointment.setReason(this.reason);

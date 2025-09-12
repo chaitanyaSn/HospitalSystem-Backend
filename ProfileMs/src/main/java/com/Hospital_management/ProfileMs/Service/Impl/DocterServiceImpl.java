@@ -1,10 +1,13 @@
 package com.Hospital_management.ProfileMs.Service.Impl;
 
+import com.Hospital_management.ProfileMs.Dto.DoctorDropDown;
 import com.Hospital_management.ProfileMs.Dto.DoctorDto;
 import com.Hospital_management.ProfileMs.Repository.DocterRepository;
 import com.Hospital_management.ProfileMs.Service.DocterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 @Service
@@ -45,5 +48,10 @@ public class DocterServiceImpl implements DocterService {
     @Override
     public boolean doctorExists(Long id) {
         return docterRepository.existsById(id);
+    }
+
+    @Override
+    public List<DoctorDropDown> getDoctorDropDown() {
+      return docterRepository.findAllDoctorDropDown();
     }
 }

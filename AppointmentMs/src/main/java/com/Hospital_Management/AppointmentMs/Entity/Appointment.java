@@ -20,7 +20,6 @@ public class Appointment {
     private Long id;
     private Long patientId;
     private Long doctorId;
-    private String appointmentDate;
     private LocalDateTime appointmentTime;
     @Enumerated(EnumType.STRING)
     private Status status;
@@ -32,7 +31,6 @@ public class Appointment {
         appointmentDto.setId(this.id);
         appointmentDto.setPatientId(this.patientId);
         appointmentDto.setDoctorId(this.doctorId);
-        appointmentDto.setAppointmentDate(this.appointmentDate);
         appointmentDto.setAppointmentTime(this.appointmentTime);
         appointmentDto.setStatus(this.status);
         appointmentDto.setReason(this.reason);
