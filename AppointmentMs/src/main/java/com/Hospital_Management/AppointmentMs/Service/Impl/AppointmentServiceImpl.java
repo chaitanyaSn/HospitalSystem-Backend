@@ -91,4 +91,15 @@ public class AppointmentServiceImpl implements AppointmentService {
                     return appointment;
                 }).toList();
     }
+
+    @Override
+    public List<AppointmentDetail> getAllAppointmentByDoctorId(Long doctorId) {
+        return appointmentRepository.findAllByDoctorId(doctorId).stream()
+                .map(appointment->{
+                    PatientDto patientDto=profileClient.getPatientById(appointment.getPatientId());
+                    appointment.setPatientName(patientDto.getName());
+
+                    return appointment;
+                }).toList();
+    }
 }

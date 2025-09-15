@@ -37,4 +37,8 @@ public class Appointment {
         appointmentDto.setNotes(this.notes);
         return appointmentDto;
     }
+
+    public Appointment(Long id){
+        this.id=id;
+    }
 }

@@ -3,6 +3,7 @@ package com.Hospital_Management.AppointmentMs.Dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.kafka.common.protocol.types.Field;
 
 import java.time.LocalDateTime;
 
