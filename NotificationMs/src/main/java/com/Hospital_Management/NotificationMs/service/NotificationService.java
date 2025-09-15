@@ -1,71 +1,58 @@
 package com.Hospital_Management.NotificationMs.service;
 
-import com.Hospital_Management.NotificationMs.Client.ProfileClient;
-import com.Hospital_Management.NotificationMs.dto.AppointmentDto;
-import com.Hospital_Management.NotificationMs.dto.DoctorDto;
-import com.Hospital_Management.NotificationMs.dto.PatientDto;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.Hospital_Management.NotificationMs.dto.AppointmentDetail;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 @Service
+@RequiredArgsConstructor
 public class NotificationService {
 
-    @Autowired
-    private JavaMailSender mailSender;
+    private final EmailService emailService;
 
-    @Autowired
-    private ProfileClient profileClient;
+    private static final Logger LOGGER = LoggerFactory.getLogger(NotificationService.class);
+    private final AtomicInteger messageCount = new AtomicInteger(0);
+
 
     @KafkaListener(topics = "${spring.kafka.topic.appointment}", groupId = "notification_group")
-    public void consumeAppointmentEvent(AppointmentDto appointmentDto) {
-        System.out.println("Received appointment event: " + appointmentDto);
+    public void consumeNotification(AppointmentDetail appointmentDetail){
 
+        int currentCount = messageCount.incrementAndGet();
 
-        PatientDto patient = profileClient.getPatientById(appointmentDto.getPatientId());
-        DoctorDto doctor = profileClient.getDoctorById(appointmentDto.getDoctorId());
+        // Log message received
+        LOGGER.info("🔔 KAFKA MESSAGE #{} RECEIVED - Processing appointment notification", currentCount);
+        LOGGER.info("📋 Appointment Details:");
+        LOGGER.info("   └─ ID: {}", appointmentDetail.getId());
+        LOGGER.info("   └─ Patient: {} ({})", appointmentDetail.getPatientName(), appointmentDetail.getPatientEmail());
+        LOGGER.info("   └─ Doctor: {}", appointmentDetail.getDoctorName());
+        LOGGER.info("   └─ Time: {}", appointmentDetail.getAppointmentTime());
+        LOGGER.info("   └─ Reason: {}", appointmentDetail.getReason());
 
-        if (patient != null && patient.getEmail() != null) {
-            sendPatientNotification(patient, doctor, appointmentDto);
+        try {
+            LOGGER.info("📧 Preparing email notification for appointment ID: {}", appointmentDetail.getId());
+            String body = "Hi " + appointmentDetail.getPatientName() + ",<br><br>"
+                    + "Your appointment has been successfully scheduled.<br><br>"
+                    + "Here are the details:<br>"
+                    + "<b>Doctor:</b> " + appointmentDetail.getDoctorName() + "<br>"
+                    + "<b>Date & Time:</b> " + appointmentDetail.getAppointmentTime() + "<br>"
+                    + "<b>Reason:</b> " + appointmentDetail.getReason() + "<br><br>"
+                    + "Please make sure to be available on time. If you need to reschedule or cancel, please visit your appointments page.<br><br>"
+                    + "<br><br>Best regards,<br>Your Healthcare Team";
+
+            emailService.sendEmail(appointmentDetail.getPatientEmail(), "Appointment Confirmation", body);
+            LOGGER.info("Email sent successfully for appointment ID: {}", appointmentDetail.getId());
+
+        } catch (Exception e) {
+            LOGGER.error("Failed to process appointment notification for ID {}: {}",
+                    appointmentDetail.getId(), e.getMessage(), e);
+            // Consider implementing retry logic or dead-letter queue
         }
+ }
 
-        // Send notification to doctor
-        if (doctor != null && doctor.getEmail() != null) {
-            sendDoctorNotification(doctor, patient, appointmentDto);
-        }
-    }
 
-    private void sendPatientNotification(PatientDto patient, DoctorDto doctor, AppointmentDto appointmentDto) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(patient.getEmail());
-        message.setSubject("Appointment Scheduled");
-        message.setText(
-                "Dear " + patient.getName() + ",\n\n" +
-                        "Your appointment with Dr. " + doctor.getName() + " is scheduled for "
-                        + appointmentDto.getAppointmentTime() + ".\nReason: " + appointmentDto.getReason() +
-                        "\n\nThank you!"
-        );
-        mailSender.send(message);
-        System.out.println(
-                "Notification sent to patient: " + patient.getEmail() + " for appointment at " + appointmentDto.getAppointmentTime()
-        );
-    }
-
-    private void sendDoctorNotification(DoctorDto doctor, PatientDto patient, AppointmentDto appointmentDto) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(doctor.getEmail());
-        message.setSubject("New Appointment Scheduled");
-        message.setText(
-                "Dear Dr. " + doctor.getName() + ",\n\n" +
-                        "A new appointment with patient " + patient.getName() + " is scheduled for "
-                        + appointmentDto.getAppointmentTime() + ".\nReason: " + appointmentDto.getReason() +
-                        "\n\nThank you!"
-        );
-        mailSender.send(message);
-        System.out.println(
-                "Notification sent to doctor: " + doctor.getEmail() + " for appointment at " + appointmentDto.getAppointmentTime()
-        );
-    }
 }

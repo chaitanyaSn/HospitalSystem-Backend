@@ -19,7 +19,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     private final AppointmentRepository appointmentRepository;
     private final ProfileClient profileClient;
-//    private final AppointmentProducer appointmentProducer;
+    private final AppointmentProducer appointmentProducer;
 
     @Override
     public Long scheduleAppointment(AppointmentDto appointmentDto) {
@@ -32,8 +32,25 @@ public class AppointmentServiceImpl implements AppointmentService {
             throw new RuntimeException("Patient not found");
         }
         appointmentDto.setStatus(Status.SCHEDULED);
-//        appointmentProducer.sendAppointmentScheduledEvent(appointmentDto);
-        return appointmentRepository.save(appointmentDto.toEntity()).getId();
+        Appointment savedAppointment = appointmentRepository.save(appointmentDto.toEntity());
+        PatientDto patientDto = profileClient.getPatientById(appointmentDto.getPatientId());
+        DoctorDto doctorDto = profileClient.getDoctorById(appointmentDto.getDoctorId());
+        AppointmentDetail appointmentDetail = new AppointmentDetail(
+                savedAppointment.getId(),
+                patientDto.getId(),
+                patientDto.getName(),
+                patientDto.getEmail(),           // patient email here
+                patientDto.getPhone(),
+                doctorDto.getId(),
+                doctorDto.getName(),
+                savedAppointment.getAppointmentTime(),
+                savedAppointment.getStatus(),
+                savedAppointment.getReason(),
+                savedAppointment.getNotes()
+        );
+        appointmentProducer.sendAppointmentScheduledEvent(appointmentDetail);
+
+        return savedAppointment.getId();
     }
 
     @Transactional
@@ -74,10 +91,12 @@ public class AppointmentServiceImpl implements AppointmentService {
         return new AppointmentDetail(appointmentDto.getId()
                 ,appointmentDto.getPatientId()
                 ,patientDto.getName()
-                , appointmentDto.getDoctorId()
-                , doctorDto.getName()
-                , appointmentDto.getAppointmentTime()
-                , appointmentDto.getStatus(),
+                ,patientDto.getEmail()
+                ,patientDto.getPhone()
+                ,appointmentDto.getDoctorId()
+                ,doctorDto.getName()
+                ,appointmentDto.getAppointmentTime()
+                ,appointmentDto.getStatus(),
                 appointmentDto.getReason()
                 ,appointmentDto.getNotes());
     }
@@ -98,7 +117,7 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .map(appointment->{
                     PatientDto patientDto=profileClient.getPatientById(appointment.getPatientId());
                     appointment.setPatientName(patientDto.getName());
-
+                    appointment.setPatientPhone(patientDto.getPhone());
                     return appointment;
                 }).toList();
     }

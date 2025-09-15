@@ -1,6 +1,7 @@
 package com.Hospital_Management.AppointmentMs.Service;
 
 
+import com.Hospital_Management.AppointmentMs.Dto.AppointmentDetail;
 import com.Hospital_Management.AppointmentMs.Dto.AppointmentDto;
 
 import org.slf4j.Logger;
@@ -14,19 +15,19 @@ public class AppointmentProducer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AppointmentProducer.class);
 
-    private final KafkaTemplate<String, AppointmentDto> kafkaTemplate;
+    private final KafkaTemplate<String, AppointmentDetail> kafkaTemplate;
 
     private final String topicName;
 
     public AppointmentProducer(
-            KafkaTemplate<String, AppointmentDto> kafkaTemplate,
+            KafkaTemplate<String, AppointmentDetail> kafkaTemplate,
             @Value("${spring.kafka.topic.appointment}") String topicName) {
         this.kafkaTemplate = kafkaTemplate;
         this.topicName = topicName;
     }
 
-    public void sendAppointmentScheduledEvent(AppointmentDto appointmentDto) {
-        LOGGER.info("Publishing appointment event: {}", appointmentDto);
-        kafkaTemplate.send(topicName, appointmentDto);
+    public void sendAppointmentScheduledEvent(AppointmentDetail appointmentDetail) {
+        LOGGER.info("Publishing appointment event: {}", appointmentDetail);
+        kafkaTemplate.send(topicName, appointmentDetail);
     }
 }

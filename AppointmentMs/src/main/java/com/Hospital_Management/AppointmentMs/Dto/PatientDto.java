@@ -23,9 +23,4 @@ public class PatientDto {
     private BloodGroup bloodGroup;
     private String allergies;
     private String chronicDiseses;
-
-
-
-
-
 }

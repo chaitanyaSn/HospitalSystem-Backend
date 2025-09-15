@@ -1,7 +1,6 @@
 spring:
   application:
     name: NotificationMs
-
   kafka:
     bootstrap-servers: localhost:9092
     consumer:
@@ -9,11 +8,30 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
-        spring.json.trusted.packages: '*'
+        spring:
+          json:
+            trusted:
+              packages: "*"
+            type:
+              mapping: "com.Hospital_Management.AppointmentMs.Dto.AppointmentDetail:com.Hospital_Management.NotificationMs.dto.AppointmentDetail"
     topic:
-      appointment: appointment_scheduled
+      appointment: appointmentDetail
+
+  mail:
+    host: smtp-relay.brevo.com
+    port: 587
+    username: 94126d002@smtp-brevo.com
+    password: LvtnC3NfEba5UFcM
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          from: chaitanyascode24@gmail.com
+
 
 
 server:
-  port:
-    - 8084
+  port: 8084

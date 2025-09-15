@@ -10,7 +10,7 @@
         <module name="GatewayMs" />
         <module name="Erureka-server" />
       </profile>
-      <profile name="Annotation profile for AppointmentMs" enabled="true">
+      <profile name="Annotation profile for NotificationMs" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />

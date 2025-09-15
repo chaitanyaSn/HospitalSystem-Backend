@@ -27,15 +27,15 @@ public class Appointment {
     private String notes;
 
     public AppointmentDto toDto() {
-        AppointmentDto appointmentDto = new AppointmentDto();
-        appointmentDto.setId(this.id);
-        appointmentDto.setPatientId(this.patientId);
-        appointmentDto.setDoctorId(this.doctorId);
-        appointmentDto.setAppointmentTime(this.appointmentTime);
-        appointmentDto.setStatus(this.status);
-        appointmentDto.setReason(this.reason);
-        appointmentDto.setNotes(this.notes);
-        return appointmentDto;
+        return new AppointmentDto(
+                this.id,
+                this.patientId,
+                this.doctorId,
+                this.appointmentTime,
+                this.status,
+                this.reason,
+                this.notes
+        );
     }
 
     public Appointment(Long id){

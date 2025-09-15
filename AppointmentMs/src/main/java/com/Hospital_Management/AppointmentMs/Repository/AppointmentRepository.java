@@ -12,12 +12,12 @@ import java.util.List;
 public interface AppointmentRepository extends CrudRepository<Appointment,Long> {
 
     @Query("SELECT new com.Hospital_Management.AppointmentMs.Dto.AppointmentDetail(" +
-            "a.id, a.patientId, '' , a.doctorId, '', a.appointmentTime, a.status, a.reason, a.notes) " +
+            "a.id, a.patientId, '','','', a.doctorId, '', a.appointmentTime, a.status, a.reason, a.notes) " +
             "FROM Appointment a WHERE a.patientId = ?1")
     List<AppointmentDetail> findAllByPatientId(Long patientId);
 
     @Query("SELECT new com.Hospital_Management.AppointmentMs.Dto.AppointmentDetail(" +
-            "a.id, a.patientId, '' , a.doctorId, '', a.appointmentTime, a.status, a.reason, a.notes) " +
+            "a.id, a.patientId, '','','', a.doctorId, '', a.appointmentTime, a.status, a.reason, a.notes) " +
             "FROM Appointment a WHERE a.doctorId = ?1")
     List<AppointmentDetail> findAllByDoctorId(Long doctorId);
 }
